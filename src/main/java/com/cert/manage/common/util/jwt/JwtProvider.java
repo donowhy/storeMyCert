@@ -18,18 +18,17 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${jwt.password}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${jwt.atk}")
+    @Value("${application.security.jwt.access-expiration}")
     private Long TOKEN_VALID_TIME;
 
-    @Value("${jwt.rtk}")
+    @Value("${application.security.jwt.refresh-expiration}")
     private Long REFRESH_TOKEN_VALID_TIME;
 
-
+    private final Date now = new Date();
     public String createAccessToken(Member member) {
-        Date now = new Date();
         Date expiration = expiration(now, TOKEN_VALID_TIME);
         Claims claims = Jwts.claims();
         claims.put("id", member.getMemberId());
@@ -42,7 +41,6 @@ public class JwtProvider {
     }
 
     public String createRefreshToken(Member member) {
-        Date now = new Date();
         Date expiration = expiration(now, REFRESH_TOKEN_VALID_TIME);
         Claims claims = Jwts.claims();
         claims.put("id", member.getMemberId());
@@ -51,7 +49,6 @@ public class JwtProvider {
 
     public String createJwt(String subject, Date now,  Date expiration, Claims claim) {
 
-        // 만료기간 1일
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(subject)
@@ -85,8 +82,6 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(removeBearer(token)).getBody().getExpiration();
 
-            Date now = new Date();
-
             return !Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                     .build()
@@ -113,7 +108,6 @@ public class JwtProvider {
                 .build();
     }
 
-    //==토큰 앞 부분('Bearer') 제거 메소드==//
     private String removeBearer(String token) {
         return token.replace("Bearer", "").trim();
     }
