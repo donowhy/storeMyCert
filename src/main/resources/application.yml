@@ -1,0 +1,7 @@
+
+application:
+  security:
+    jwt:
+      secret-key: secret-key
+      access-expiration: 5 # 30 minutes
+      refresh-expiration: 10 # 30 days
