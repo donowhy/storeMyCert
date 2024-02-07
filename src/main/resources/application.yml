@@ -2,6 +2,29 @@
 application:
   security:
     jwt:
-      secret-key: secret-key
-      access-expiration: 5 # 30 minutes
-      refresh-expiration: 10 # 30 days
+      secret-key: secret-keysecret-keysecret-keysecret-keysecret-keysecret-keysecret-keysecret-key
+      access-expiration: 86400000 # 30 minutes
+      refresh-expiration: 2592000000 # 30 days
+
+server:
+  port: 8090
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  datasource:
+    # datasource ??? ??? ??? ?? ??
+    url: jdbc:mysql://localhost:3307/cert
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
